@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #6366f1;
+  --color-primary-dark: #4f46e5;
+  --color-primary-light: #818cf8;
+  
+  --color-secondary: #a855f7;
+  --color-secondary-dark: #9333ea;
+  --color-secondary-light: #c084fc;
+  
+  --color-dark: #0f172a;
+  --color-dark-lighter: #1e293b;
+  --color-dark-lightest: #334155;
+  
+  --font-poppins: "Poppins", sans-serif;
+  --font-inter: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply font-inter bg-slate-50 text-slate-900;
+  }
+  
+  .dark body {
+    @apply bg-dark text-slate-100;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  .btn-primary {
+    @apply px-6 py-2 rounded-lg bg-gradient-to-r from-primary to-secondary text-white font-semibold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-primary/20 cursor-pointer;
+  }
+  
+  .card {
+    @apply bg-white dark:bg-dark-lighter rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm transition-all hover:shadow-md;
+  }
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary font-bold;
+}
+
+.wave-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+}
+
+.wave-bar {
+  width: 4px;
+  height: 20px;
+  background-color: var(--color-primary);
+  margin: 0 2px;
+  border-radius: 10px;
+  animation: wave 1s ease-in-out infinite;
+}
+
+@keyframes wave {
+  0%, 100% { height: 20px; }
+  50% { height: 50px; }
+}
