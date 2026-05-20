@@ -340,10 +340,10 @@ const Record = () => {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="p-4 rounded-2xl bg-white dark:bg-dark border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-sm space-y-2">
-                          <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Sentiment</span>
-                          <span className={`px-3 py-1 rounded-full text-xs font-bold w-fit ${
+                      <div className="space-y-4">
+                        <div className="p-5 rounded-2xl bg-white dark:bg-dark border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
+                          <span className="text-sm font-bold dark:text-slate-300">Sentiment</span>
+                          <span className={`px-4 py-1 rounded-full text-xs font-bold ${
                             result.sentiment === 'Positive' ? 'bg-green-100 text-green-600 dark:bg-green-950/20 dark:text-green-400' : 
                             result.sentiment === 'Negative' ? 'bg-red-100 text-red-600 dark:bg-red-950/20 dark:text-red-400' : 'bg-yellow-100 text-yellow-600 dark:bg-yellow-950/20 dark:text-yellow-400'
                           }`}>
@@ -351,12 +351,12 @@ const Record = () => {
                           </span>
                         </div>
                         
-                        <div className="p-4 rounded-2xl bg-white dark:bg-dark border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-sm space-y-2">
-                          <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Emotion</span>
+                        <div className="p-5 rounded-2xl bg-white dark:bg-dark border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
+                          <span className="text-sm font-bold dark:text-slate-300">Emotion</span>
                           {(() => {
                             const emo = getEmotionDetails(result.emotion);
                             return (
-                              <span className={`px-3 py-1 rounded-full text-xs font-bold w-fit border ${emo.color}`}>
+                              <span className={`px-4 py-1 rounded-full text-xs font-bold border ${emo.color}`}>
                                 {emo.emoji} {emo.label}
                               </span>
                             );
