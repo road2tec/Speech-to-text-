@@ -4,14 +4,15 @@ A modern AI-powered web application that converts voice recordings into text not
 
 ## Features
 - **Speech-to-Text**: High-accuracy transcription using OpenAI Whisper.
-- **NLP Insights**: Automatic generation of summaries, keywords, sentiment, and action items.
-- **Modern Dashboard**: Beautiful UI with analytics and note management.
+- **Emotion Detection**: Text-based emotion classification (`Joy`, `Sadness`, `Anger`, `Fear`, `Surprise`, `Love`, `Neutral`) using DistilBERT or robust fallback processing.
+- **NLP Insights**: Automatic generation of summaries, keywords, sentiment, emotion distribution, and action items.
+- **Modern Dashboard**: Beautiful UI with dynamic analytics, interactive emotion charts, and note management.
 - **Secure Auth**: JWT-based authentication with protected routes.
 - **Mobile Responsive**: Fully responsive design using Tailwind CSS and Framer Motion.
 
 ## Tech Stack
-- **Frontend**: React.js, Tailwind CSS, Framer Motion, Axios.
-- **Backend**: FastAPI, MongoDB, OpenAI Whisper, HuggingFace Transformers.
+- **Frontend**: React.js, Tailwind CSS, Framer Motion, Axios, Chart.js.
+- **Backend**: FastAPI, MongoDB, OpenAI Whisper, HuggingFace Transformers (DistilBERT emotion pipeline), spaCy.
 
 ## Setup Instructions
 
@@ -64,4 +65,9 @@ A modern AI-powered web application that converts voice recordings into text not
 - Save the note to view it in your dashboard and notes history.
 
 ## AI Models
-Note: On first run, the backend will download the Whisper (base) and BART-large-CNN summarization models. This may take a few minutes depending on your internet connection.
+Note: On first run, the backend will download the following models:
+- **OpenAI Whisper (base)** for speech-to-text.
+- **BART-large-CNN** for summarization.
+- **bhadresh-savani/distilbert-base-uncased-emotion** for text emotion detection.
+
+This setup and downloading process may take a few minutes depending on your internet connection.
