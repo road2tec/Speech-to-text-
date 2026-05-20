@@ -16,6 +16,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
 import { Link } from 'react-router-dom';
 
+const getEmotionDetails = (emotion) => {
+  const map = {
+    Joy: { emoji: '😄', label: 'Joy', color: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30' },
+    Sadness: { emoji: '😢', label: 'Sadness', color: 'bg-blue-50 text-blue-700 dark:bg-blue-950/20 dark:text-blue-400 border-blue-100 dark:border-blue-900/30' },
+    Anger: { emoji: '😠', label: 'Anger', color: 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400 border-rose-100 dark:border-rose-900/30' },
+    Fear: { emoji: '😨', label: 'Fear', color: 'bg-purple-50 text-purple-700 dark:bg-purple-950/20 dark:text-purple-400 border-purple-100 dark:border-purple-900/30' },
+    Surprise: { emoji: '😮', label: 'Surprise', color: 'bg-amber-50 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400 border-amber-100 dark:border-amber-900/30' },
+    Love: { emoji: '😍', label: 'Love', color: 'bg-pink-50 text-pink-700 dark:bg-pink-950/20 dark:text-pink-400 border-pink-100 dark:border-pink-900/30' },
+    Neutral: { emoji: '😐', label: 'Neutral', color: 'bg-slate-50 text-slate-700 dark:bg-slate-950/20 dark:text-slate-400 border-slate-100 dark:border-slate-800' }
+  };
+  return map[emotion] || map.Neutral;
+};
+
 const Notes = () => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -189,9 +202,16 @@ const NoteCard = ({ note, view, onToggleFavorite, onDelete }) => {
           >
             <Star size={18} fill={note.is_favorite ? 'currentColor' : 'none'} />
           </button>
-          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-dark text-slate-600 dark:text-slate-400">
-            {note.topic || 'General'}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-dark text-slate-600 dark:text-slate-400">
+              {note.topic || 'General'}
+            </span>
+            {note.emotion && (
+              <span className="text-xs px-2 py-0.5 rounded-full border border-slate-200 dark:border-slate-800 bg-white dark:bg-dark text-slate-600 dark:text-slate-400 flex items-center gap-1 shadow-sm">
+                {getEmotionDetails(note.emotion).emoji} {getEmotionDetails(note.emotion).label}
+              </span>
+            )}
+          </div>
           <div className="text-xs text-slate-400 flex items-center gap-1">
             <Clock size={14} /> {formatDate(note.created_at)}
           </div>
@@ -212,10 +232,15 @@ const NoteCard = ({ note, view, onToggleFavorite, onDelete }) => {
       className="card flex flex-col p-6 group h-full"
     >
       <div className="flex justify-between items-start mb-4">
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           {note.sentiment === 'Positive' && <div className="w-2 h-2 rounded-full bg-green-500" title="Positive"></div>}
           {note.sentiment === 'Negative' && <div className="w-2 h-2 rounded-full bg-red-500" title="Negative"></div>}
           <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">{note.topic || 'General'}</span>
+          {note.emotion && (
+            <span className="px-2 py-0.5 rounded bg-slate-50 dark:bg-dark border border-slate-100 dark:border-slate-800 text-[10px] font-bold text-slate-500 flex items-center gap-1" title={`Emotion: ${note.emotion}`}>
+              {getEmotionDetails(note.emotion).emoji} {getEmotionDetails(note.emotion).label}
+            </span>
+          )}
         </div>
         <button 
           onClick={(e) => { e.preventDefault(); onToggleFavorite(); }}

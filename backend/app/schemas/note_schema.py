@@ -8,6 +8,7 @@ class NoteBase(BaseModel):
     summary: Optional[str] = None
     keywords: List[str] = []
     sentiment: Optional[str] = None
+    emotion: Optional[str] = None
     tasks: List[str] = []
     topic: Optional[str] = None
 
@@ -20,6 +21,7 @@ class NoteUpdate(BaseModel):
     summary: Optional[str] = None
     keywords: Optional[List[str]] = None
     sentiment: Optional[str] = None
+    emotion: Optional[str] = None
     tasks: Optional[List[str]] = None
     topic: Optional[str] = None
     is_favorite: Optional[bool] = None

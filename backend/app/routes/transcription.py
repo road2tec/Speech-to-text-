@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, File, UploadFile, HTTPException
 import os
 import uuid
 from ..services.whisper_service import transcribe_audio
-from ..services.nlp_service import get_summary, get_keywords, get_sentiment, extract_tasks, get_topic
+from ..services.nlp_service import get_summary, get_keywords, get_sentiment, extract_tasks, get_topic, get_emotion
 from ..middleware.auth_middleware import get_current_user
 
 router = APIRouter(prefix="/api/transcribe", tags=["transcription"])
@@ -32,6 +32,7 @@ async def transcribe_and_analyze(
         summary = get_summary(transcript)
         keywords = get_keywords(transcript)
         sentiment = get_sentiment(transcript)
+        emotion = get_emotion(transcript)
         tasks = extract_tasks(transcript)
         topic = get_topic(transcript)
         
@@ -40,6 +41,7 @@ async def transcribe_and_analyze(
             "summary": summary,
             "keywords": keywords,
             "sentiment": sentiment,
+            "emotion": emotion,
             "tasks": tasks,
             "topic": topic,
             "audio_file": file_name

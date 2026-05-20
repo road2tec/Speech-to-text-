@@ -73,3 +73,85 @@ def get_topic(text: str):
     if keywords:
         return keywords[0].capitalize()
     return "General"
+
+_emotion_classifier = None
+
+def get_emotion_classifier():
+    global _emotion_classifier
+    if _emotion_classifier is None:
+        try:
+            # Lazy load the emotion classification model
+            _emotion_classifier = pipeline("text-classification", model="bhadresh-savani/distilbert-base-uncased-emotion")
+        except Exception:
+            _emotion_classifier = "fallback"
+    return _emotion_classifier
+
+def detect_emotion_fallback(text: str) -> str:
+    # Lexicon-based fallback
+    text_lower = text.lower()
+    
+    emotion_keywords = {
+        "Joy": ["happy", "joy", "excited", "wonderful", "great", "love", "glad", "excellent", "awesome", "fantastic", "amazing", "cheerful", "delighted"],
+        "Sadness": ["sad", "depressed", "sorry", "cry", "hurt", "pain", "unhappy", "lonely", "grief", "gloomy", "mourn", "disappointed"],
+        "Anger": ["angry", "mad", "hate", "furious", "annoyed", "irritated", "rage", "pissed", "offended", "resentful"],
+        "Fear": ["scared", "afraid", "fear", "anxious", "nervous", "terrified", "panic", "worried", "dread", "frightened"],
+        "Surprise": ["surprised", "shocked", "unexpected", "wow", "amazing", "sudden", "unbelievable", "astonished"],
+        "Love": ["love", "adore", "affection", "passion", "sweetheart", "beloved", "caring", "fondness"]
+    }
+    
+    counts = {emotion: 0 for emotion in emotion_keywords}
+    for emotion, keywords in emotion_keywords.items():
+        for word in keywords:
+            if re.search(r'\b' + re.escape(word) + r'\b', text_lower):
+                counts[emotion] += 1
+                
+    max_emotion = max(counts, key=counts.get)
+    if counts[max_emotion] > 0:
+        return max_emotion
+        
+    # If no keywords matched, use TextBlob sentiment to guess
+    try:
+        blob = TextBlob(text)
+        polarity = blob.sentiment.polarity
+        subjectivity = blob.sentiment.subjectivity
+        
+        if polarity > 0.3:
+            return "Joy"
+        elif polarity < -0.3:
+            return "Sadness" if subjectivity > 0.5 else "Anger"
+        elif subjectivity > 0.6:
+            return "Surprise"
+    except Exception:
+        pass
+        
+    return "Neutral"
+
+def get_emotion(text: str) -> str:
+    if not text or len(text.strip()) == 0:
+        return "Neutral"
+        
+    classifier = get_emotion_classifier()
+    if classifier != "fallback":
+        try:
+            # We take the first 512 characters to avoid model input length limits
+            truncated_text = text[:512]
+            res = classifier(truncated_text)
+            if res and len(res) > 0:
+                label = res[0]["label"]
+                # bhadresh-savani/distilbert-base-uncased-emotion labels: 
+                # sadness, joy, love, anger, fear, surprise
+                emotion_map = {
+                    "sadness": "Sadness",
+                    "joy": "Joy",
+                    "love": "Love",
+                    "anger": "Anger",
+                    "fear": "Fear",
+                    "surprise": "Surprise"
+                }
+                return emotion_map.get(label.lower(), label.capitalize())
+        except Exception:
+            pass
+            
+    # Fallback if model fails or pipeline was offline
+    return detect_emotion_fallback(text)
+

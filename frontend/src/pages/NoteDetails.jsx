@@ -17,6 +17,19 @@ import {
 import { motion } from 'framer-motion';
 import api from '../services/api';
 
+const getEmotionDetails = (emotion) => {
+  const map = {
+    Joy: { emoji: '😄', label: 'Joy', color: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30' },
+    Sadness: { emoji: '😢', label: 'Sadness', color: 'bg-blue-50 text-blue-700 dark:bg-blue-950/20 dark:text-blue-400 border-blue-100 dark:border-blue-900/30' },
+    Anger: { emoji: '😠', label: 'Anger', color: 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400 border-rose-100 dark:border-rose-900/30' },
+    Fear: { emoji: '😨', label: 'Fear', color: 'bg-purple-50 text-purple-700 dark:bg-purple-950/20 dark:text-purple-400 border-purple-100 dark:border-purple-900/30' },
+    Surprise: { emoji: '😮', label: 'Surprise', color: 'bg-amber-50 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400 border-amber-100 dark:border-amber-900/30' },
+    Love: { emoji: '😍', label: 'Love', color: 'bg-pink-50 text-pink-700 dark:bg-pink-950/20 dark:text-pink-400 border-pink-100 dark:border-pink-900/30' },
+    Neutral: { emoji: '😐', label: 'Neutral', color: 'bg-slate-50 text-slate-700 dark:bg-slate-950/20 dark:text-slate-400 border-slate-100 dark:border-slate-800' }
+  };
+  return map[emotion] || map.Neutral;
+};
+
 const NoteDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -190,6 +203,20 @@ const NoteDetails = () => {
                 <span className="font-bold text-xs dark:text-slate-300">{note.sentiment}</span>
               </div>
             </div>
+
+            {note.emotion && (
+              <div className="card p-6 flex justify-between items-center shadow-md">
+                <span className="font-bold dark:text-white text-sm">Emotion</span>
+                {(() => {
+                  const emo = getEmotionDetails(note.emotion);
+                  return (
+                    <span className={`px-3 py-1 rounded-full text-xs font-bold border ${emo.color}`}>
+                      {emo.emoji} {emo.label}
+                    </span>
+                  );
+                })()}
+              </div>
+            )}
           </div>
         </div>
       </main>

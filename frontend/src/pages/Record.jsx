@@ -20,6 +20,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import api from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
+const getEmotionDetails = (emotion) => {
+  const map = {
+    Joy: { emoji: '😄', label: 'Joy', color: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/20 dark:text-emerald-400 border-emerald-100 dark:border-emerald-900/30' },
+    Sadness: { emoji: '😢', label: 'Sadness', color: 'bg-blue-50 text-blue-700 dark:bg-blue-950/20 dark:text-blue-400 border-blue-100 dark:border-blue-900/30' },
+    Anger: { emoji: '😠', label: 'Anger', color: 'bg-rose-50 text-rose-700 dark:bg-rose-950/20 dark:text-rose-400 border-rose-100 dark:border-rose-900/30' },
+    Fear: { emoji: '😨', label: 'Fear', color: 'bg-purple-50 text-purple-700 dark:bg-purple-950/20 dark:text-purple-400 border-purple-100 dark:border-purple-900/30' },
+    Surprise: { emoji: '😮', label: 'Surprise', color: 'bg-amber-50 text-amber-700 dark:bg-amber-950/20 dark:text-amber-400 border-amber-100 dark:border-amber-900/30' },
+    Love: { emoji: '😍', label: 'Love', color: 'bg-pink-50 text-pink-700 dark:bg-pink-950/20 dark:text-pink-400 border-pink-100 dark:border-pink-900/30' },
+    Neutral: { emoji: '😐', label: 'Neutral', color: 'bg-slate-50 text-slate-700 dark:bg-slate-950/20 dark:text-slate-400 border-slate-100 dark:border-slate-800' }
+  };
+  return map[emotion] || map.Neutral;
+};
+
 const Record = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -132,6 +145,7 @@ const Record = () => {
         summary: result.summary,
         keywords: result.keywords,
         sentiment: result.sentiment,
+        emotion: result.emotion || 'Neutral',
         tasks: result.tasks,
         topic: result.topic
       });
@@ -326,14 +340,28 @@ const Record = () => {
                         </div>
                       </div>
 
-                      <div className="p-5 rounded-2xl bg-white dark:bg-dark border border-slate-200 dark:border-slate-800 flex items-center justify-between shadow-sm">
-                        <span className="text-sm font-bold dark:text-slate-300">Sentiment</span>
-                        <span className={`px-4 py-1 rounded-full text-xs font-bold ${
-                          result.sentiment === 'Positive' ? 'bg-green-100 text-green-600' : 
-                          result.sentiment === 'Negative' ? 'bg-red-100 text-red-600' : 'bg-yellow-100 text-yellow-600'
-                        }`}>
-                          {result.sentiment}
-                        </span>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="p-4 rounded-2xl bg-white dark:bg-dark border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-sm space-y-2">
+                          <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Sentiment</span>
+                          <span className={`px-3 py-1 rounded-full text-xs font-bold w-fit ${
+                            result.sentiment === 'Positive' ? 'bg-green-100 text-green-600 dark:bg-green-950/20 dark:text-green-400' : 
+                            result.sentiment === 'Negative' ? 'bg-red-100 text-red-600 dark:bg-red-950/20 dark:text-red-400' : 'bg-yellow-100 text-yellow-600 dark:bg-yellow-950/20 dark:text-yellow-400'
+                          }`}>
+                            {result.sentiment}
+                          </span>
+                        </div>
+                        
+                        <div className="p-4 rounded-2xl bg-white dark:bg-dark border border-slate-200 dark:border-slate-800 flex flex-col justify-between shadow-sm space-y-2">
+                          <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Emotion</span>
+                          {(() => {
+                            const emo = getEmotionDetails(result.emotion);
+                            return (
+                              <span className={`px-3 py-1 rounded-full text-xs font-bold w-fit border ${emo.color}`}>
+                                {emo.emoji} {emo.label}
+                              </span>
+                            );
+                          })()}
+                        </div>
                       </div>
                     </div>
                   </div>

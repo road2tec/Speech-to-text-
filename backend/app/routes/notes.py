@@ -25,6 +25,7 @@ async def get_analytics(current_user: dict = Depends(get_current_user)):
             "total_tasks": 0,
             "sentiment_distribution": {},
             "topic_distribution": {},
+            "emotion_distribution": {},
             "total_recordings": 0
         }
     
@@ -35,6 +36,10 @@ async def get_analytics(current_user: dict = Depends(get_current_user)):
     # Topic distribution
     topics = [n.get("topic", "General") for n in notes]
     topic_counts = Counter(topics)
+
+    # Emotion distribution
+    emotions = [n.get("emotion", "Neutral") for n in notes]
+    emotion_counts = Counter(emotions)
     
     # Total tasks
     total_tasks = sum([len(n.get("tasks", [])) for n in notes])
@@ -44,6 +49,7 @@ async def get_analytics(current_user: dict = Depends(get_current_user)):
         "total_tasks": total_tasks,
         "sentiment_distribution": dict(sentiment_counts),
         "topic_distribution": dict(topic_counts),
+        "emotion_distribution": dict(emotion_counts),
         "total_recordings": total_notes
     }
 
